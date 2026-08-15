@@ -5,8 +5,11 @@
 Official implementation of *ARC-CT: Anatomy-Routed Contrastive Vision-Language
 Learning for 3D Chest CT* (MICCAI 2026, TIA workshop — oral).
 
-ARC-CT learns zero-shot chest-CT abnormality classification from radiology
-reports alone. It adds three things to global image-text contrastive learning:
+ARC-CT is a region-aware contrastive vision-language framework for 3D chest CT.
+It learns from paired CT volumes and their radiology reports, without manual
+annotations or bounding boxes, and classifies 18 abnormalities zero-shot by
+comparing a volume against text prompts. It adds three things to global
+image-text contrastive learning:
 
 1. **AnatomyQFormer** — query transformer whose *anatomy* queries are masked to
    one organ each, so anatomy is injected without bounding boxes or region
