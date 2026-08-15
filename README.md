@@ -1,6 +1,7 @@
 # ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT
 
-[![paper](https://img.shields.io/badge/MICCAI%202026-TIA%20workshop-blue)](https://github.com/arc-ct/arc-ct)
+[![paper](https://img.shields.io/badge/paper-OpenReview-b31b1b)](https://openreview.net/pdf?id=t6mhjZ4R70)
+[![weights](https://img.shields.io/badge/weights-HuggingFace-yellow)](https://huggingface.co/arc-ct/arc-ct)
 
 Official implementation of *ARC-CT: Anatomy-Routed Contrastive Vision-Language
 Learning for 3D Chest CT* (MICCAI 2026, TIA workshop — oral).
@@ -95,6 +96,18 @@ arcct/            model and data code
 tools/            entry points (train / evaluate / prepare data)
 configs/          the exact settings behind the reported numbers
 docs/             reproduction notes and the LLM prompts
+```
+
+## Pretrained weights
+
+Checkpoints for all three seeds, plus the Stage-1 backbone, are on the Hugging Face Hub:
+
+```bash
+pip install huggingface_hub
+python -c "from huggingface_hub import snapshot_download; \
+           snapshot_download('arc-ct/arc-ct', local_dir='checkpoints')"
+
+RAC_EVAL_CKPT=checkpoints/arcct_seed0.pt python tools/evaluate.py
 ```
 
 ## Citation
