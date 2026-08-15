@@ -42,11 +42,11 @@ import tqdm
 from sklearn.metrics import accuracy_score, f1_score, precision_score, roc_auc_score
 from torch.utils.data import DataLoader, Dataset
 
-SUBMIT_DIR = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(SUBMIT_DIR))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "tools"))
 
-from dataset import PATHOLOGIES, _pad_crop_hwd, _to_3ch_hwd  # noqa: E402
-from eval import build_model_for_eval, encode_prompts, prompt_probs  # noqa: E402
+from arcct.dataset import PATHOLOGIES, _pad_crop_hwd, _to_3ch_hwd  # noqa: E402
+from evaluate import build_model_for_eval, encode_prompts, prompt_probs  # noqa: E402
 
 
 # CT-RATE cache spacing (x, y, z) mm -- batched_ctrate_amax5.NPZ_TARGET_SPACING.
@@ -175,7 +175,7 @@ def main():
         "RAC_RADCHEST_NPZ", "/mnt/amax5_drive/alp_ozaydin_0/data/rad_chest_ct/extracted"))
     ap.add_argument("--rc_labels_csv", default=os.environ.get(
         "RAC_RADCHEST_LABELS",
-        str(SUBMIT_DIR / "data" / "radchest_ctrate_aligned_full.csv")))
+        str(ROOT / "data" / "radchest_ctrate_aligned_full.csv")))
     ap.add_argument("--batch_size", type=int, default=int(os.environ.get("EVAL_BATCH_SIZE", "4")))
     ap.add_argument("--num_workers", type=int, default=int(os.environ.get("EVAL_NUM_WORKERS", "4")))
     ap.add_argument("--n_bootstrap", type=int, default=int(os.environ.get("EVAL_BOOTSTRAP", "1000")))

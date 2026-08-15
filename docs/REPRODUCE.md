@@ -52,3 +52,20 @@ training or tuning.
 python tools/gradcam.py --ckpt runs/arcct_seed0/CTCLIP.best.pt \
     --volume DATA/npz/valid/<volume>.npz --classes "Cardiomegaly,Arterial wall calcification,Pleural effusion,Consolidation"
 ```
+
+## Sanity check (no data required)
+
+```bash
+python - <<'EOF'
+import os, torch; os.environ["RAC_KINETICS_REQUIRED"] = "0"
+from arcct.image_encoder import RACImageEncoder
+from arcct.anatomy_qformer import AnatomyQFormer
+from arcct.dataset import PATHOLOGIES, PATHOLOGY_FINE_ORGANS
+enc = RACImageEncoder(pretrained_kinetics=False).eval()
+feat = enc.forward_spatial(torch.randn(1, 3, 96, 192, 192))     # -> (1, 512, 12, 12, 12)
+qf = AnatomyQFormer(anatomy_labels=list(range(1, 11)),
+                    pathology_labels=[PATHOLOGY_FINE_ORGANS.get(p, []) for p in PATHOLOGIES],
+                    num_global=2, dim=512, depth=4, num_heads=8, image_dim=512).eval()
+print(feat.shape, qf.qformer.num_queries)                        # (1,512,12,12,12) 30
+EOF
+```

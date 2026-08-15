@@ -21,10 +21,10 @@ import tqdm
 from sklearn.metrics import roc_auc_score
 from torch.utils.data import DataLoader
 
-HERE = os.path.dirname(os.path.abspath(__file__))
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.environ.setdefault("TORCH_HOME", f"{HERE}/.cache/torch")
 os.makedirs(os.environ["TORCH_HOME"], exist_ok=True)
-sys.path.insert(0, HERE)
+sys.path.insert(0, HERE); sys.path.insert(0, os.path.join(HERE, "tools"))
 
 from arcct.dataset import PATHOLOGIES, N_PATH, RACDatasetV4, rac_collate  # noqa: E402
 from arcct.image_encoder import RACImageEncoder  # noqa: E402

@@ -33,12 +33,12 @@ import torch.nn.functional as F
 import tqdm
 from torch.utils.data import DataLoader
 
-HERE = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(HERE))
+HERE = Path(__file__).resolve().parents[1].parent
+sys.path.insert(0, str(HERE)); sys.path.insert(0, str(HERE / "tools"))
 
-from dataset import PATHOLOGIES, RACDatasetV4, rac_collate  # noqa: E402
-from eval import build_model_for_eval, encode_prompts, TEMPERATURE  # noqa: E402
-from model.anatomy_qformer import build_role_mask  # noqa: E402
+from arcct.dataset import PATHOLOGIES, RACDatasetV4, rac_collate  # noqa: E402
+from evaluate import build_model_for_eval, encode_prompts, TEMPERATURE  # noqa: E402
+from arcct.anatomy_qformer import build_role_mask  # noqa: E402
 
 DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "/mnt/amax5_drive/alp_ozaydin_0/data")
 DATA_VALID = f"{DATA_ROOT}/mps_ct_npz/valid"

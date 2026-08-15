@@ -22,11 +22,11 @@ import torch.nn.functional as F
 import tqdm
 from torch.utils.data import DataLoader
 
-SUBMIT_DIR = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(SUBMIT_DIR))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "tools"))
 
-from dataset import PATHOLOGIES, RACDatasetV4, rac_collate  # noqa: E402
-from eval import (  # noqa: E402
+from arcct.dataset import PATHOLOGIES, RACDatasetV4, rac_collate  # noqa: E402
+from evaluate import (  # noqa: E402
     DATA_VALID, LABELS_VALID, MASK_VALID, REPORTS_VALID,
     PROMPT_LEN, build_model_for_eval,
 )

@@ -21,8 +21,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precisio
 from torch.utils.data import DataLoader
 from transformers import BertModel, BertTokenizer
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, HERE)
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, HERE); sys.path.insert(0, os.path.join(HERE, "tools"))
 
 from arcct.dataset import PATHOLOGIES, N_PATH, PATHOLOGY_FINE_ORGANS, RACDatasetV4, rac_collate  # noqa: E402
 from arcct.lora import apply_lora_to_bert  # noqa: E402
@@ -30,7 +30,6 @@ from arcct.image_encoder import RACImageEncoder  # noqa: E402
 from arcct.ct_clip import CTCLIP  # noqa: E402
 from arcct.qformer import QFormer  # noqa: E402
 from arcct.anatomy_qformer import AnatomyQFormer  # noqa: E402
-from model.itm_head import ITMHead  # noqa: E402
 
 
 DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "/mnt/amax5_drive/alp_ozaydin_0/data")
