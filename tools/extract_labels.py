@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-build_doubao_labels.py
-======================
+extract_labels.py
+=================
 Recreate ctrate_labeled_by_doubao.csv by calling an LLM to classify
 CT-RATE radiology reports into 18 binary pathology labels.
 
-Supports any OpenAI-compatible API (Doubao, Claude via proxy, GPT, etc.)
+Supports any OpenAI-compatible API (Doubao, GPT, etc.)
 configured via env vars:
 
     DOUBAO_API_KEY    — API key (required)
