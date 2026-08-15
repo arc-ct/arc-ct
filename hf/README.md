@@ -37,8 +37,7 @@ the seed-to-seed s.d. of ~0.001 macro AUC.
 git clone https://github.com/arc-ct/arc-ct && cd arc-ct
 pip install -r requirements.txt
 
-python -c "from huggingface_hub import snapshot_download; \
-           snapshot_download('arc-ct/arc-ct', local_dir='checkpoints')"
+hf download arc-ct/arc-ct --local-dir checkpoints
 
 RAC_EVAL_CKPT=checkpoints/arcct_seed0.pt python tools/evaluate.py
 ```

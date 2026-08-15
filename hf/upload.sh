@@ -1,13 +1,24 @@
 #!/usr/bin/env bash
 # Upload ARC-CT checkpoints to the Hugging Face Hub.
-# Requires: pip install huggingface_hub && huggingface-cli login
+#
+#   pip install huggingface_hub
+#   hf auth login
+#   SRC=/path/to/checkpoints ./hf/upload.sh
+#
+# SRC must contain: stage1_backbone.pt arcct_seed{0,1,2}.pt
 set -euo pipefail
 REPO=${REPO:-arc-ct/arc-ct}
 SRC=${SRC:?set SRC to the directory holding the .pt checkpoints}
 
-huggingface-cli repo create "$REPO" --type model -y || true
-huggingface-cli upload "$REPO" hf/README.md README.md
+hf repos create "$REPO" --type model --public || true
+hf upload "$REPO" hf/README.md README.md --type model
+
 for f in stage1_backbone.pt arcct_seed0.pt arcct_seed1.pt arcct_seed2.pt; do
-  [ -f "$SRC/$f" ] && huggingface-cli upload "$REPO" "$SRC/$f" "$f"
+  if [ -f "$SRC/$f" ]; then
+    echo "uploading $f"
+    hf upload "$REPO" "$SRC/$f" "$f" --type model
+  else
+    echo "missing (skipped): $SRC/$f"
+  fi
 done
 echo "done: https://huggingface.co/$REPO"
