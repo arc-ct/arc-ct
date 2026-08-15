@@ -28,8 +28,19 @@ comparing a volume against text prompts.
 | `arcct_seed1.pt` | full ARC-CT model, seed 1 |
 | `arcct_seed2.pt` | full ARC-CT model, seed 2 |
 
-Reported numbers are the three-seed mean; any single seed reproduces to within
-the seed-to-seed s.d. of ~0.001 macro AUC.
+All four were re-verified on the CT-RATE validation split (3,002 volumes) before
+release — every checkpoint loads with no missing or unexpected keys:
+
+| checkpoint | macro AUC (with organ masks) | macro AUC (mask-free) |
+|---|---|---|
+| `arcct_seed0.pt` | 0.8543 | 0.8518 |
+| `arcct_seed1.pt` | 0.8522 | 0.8525 |
+| `arcct_seed2.pt` | 0.8540 | 0.8528 |
+| **mean ± s.d.** | **0.8535 ± 0.0011** | **0.8524 ± 0.0005** |
+
+Mask-free is the setting you get without TotalSegmentator, and it costs only
+0.0011 macro AUC. `stage1_backbone.pt` is an 8-epoch Stage-1 run for warm-starting
+your own Stage 2; it is not the exact checkpoint used for the runs above.
 
 ## Usage
 

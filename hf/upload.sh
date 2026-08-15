@@ -10,7 +10,9 @@ set -euo pipefail
 REPO=${REPO:-arc-ct/arc-ct}
 SRC=${SRC:?set SRC to the directory holding the .pt checkpoints}
 
-hf repos create "$REPO" --type model --public || true
+# private by default; flip with PUBLIC=1 once you are ready to release
+if [ "${PUBLIC:-0}" = "1" ]; then VIS=--public; else VIS=--private; fi
+hf repos create "$REPO" --type model $VIS || true
 hf upload "$REPO" hf/README.md README.md --type model
 
 for f in stage1_backbone.pt arcct_seed0.pt arcct_seed1.pt arcct_seed2.pt; do
