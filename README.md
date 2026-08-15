@@ -1,5 +1,7 @@
 # ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT
 
+[![paper](https://img.shields.io/badge/MICCAI%202026-TIA%20workshop-blue)](https://github.com/arc-ct/arc-ct)
+
 Official implementation of *ARC-CT: Anatomy-Routed Contrastive Vision-Language
 Learning for 3D Chest CT* (MICCAI 2026, TIA workshop — oral).
 
