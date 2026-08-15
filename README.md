@@ -100,11 +100,12 @@ docs/             reproduction notes and the LLM prompts
 ## Citation
 
 ```bibtex
-@inproceedings{arcct2026,
-  title     = {ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT},
-  author    = {I{\c{s}}{\i}k, H{\"u}seyin Umut and Ozaydin, Mehmet Alp and Kurugol, Sila and Ertekin, {\c{S}}eyda},
-  booktitle = {MICCAI Workshop on Topology- and Graph-Informed Imaging Analysis (TIA)},
-  year      = {2026}
+@inproceedings{isik2026arcct,
+  title     = {{ARC}-{CT}: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest {CT}},
+  author    = {Huseyin Umut Isik and Mehmet Alp Ozaydin and Sila Kurugol and Seyda Ertekin},
+  booktitle = {The Third International Workshop on Thoracic Image Analysis at MICCAI 2026},
+  year      = {2026},
+  url       = {https://openreview.net/forum?id=t6mhjZ4R70}
 }
 ```
 

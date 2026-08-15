@@ -4,25 +4,26 @@ title: "ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest
 repository-code: "https://github.com/arc-ct/arc-ct"
 license: MIT
 authors:
-  - family-names: "Işık"
-    given-names: "Hüseyin Umut"
+  - family-names: "Isik"
+    given-names: "Huseyin Umut"
   - family-names: "Ozaydin"
     given-names: "Mehmet Alp"
   - family-names: "Kurugol"
     given-names: "Sila"
   - family-names: "Ertekin"
-    given-names: "Şeyda"
+    given-names: "Seyda"
 preferred-citation:
   type: conference-paper
   title: "ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT"
   year: 2026
-  collection-title: "MICCAI Workshop on Topology- and Graph-Informed Imaging Analysis (TIA)"
+  collection-title: "The Third International Workshop on Thoracic Image Analysis at MICCAI 2026"
+  url: "https://openreview.net/forum?id=t6mhjZ4R70"
   authors:
-    - family-names: "Işık"
-      given-names: "Hüseyin Umut"
+    - family-names: "Isik"
+      given-names: "Huseyin Umut"
     - family-names: "Ozaydin"
       given-names: "Mehmet Alp"
     - family-names: "Kurugol"
       given-names: "Sila"
     - family-names: "Ertekin"
-      given-names: "Şeyda"
+      given-names: "Seyda"
