@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+runs/
+data/
+*.npz
+*.pt
+*.ckpt
+.env
