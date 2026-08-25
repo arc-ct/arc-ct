@@ -118,8 +118,19 @@ paired patient bootstrap):
 | per-organ alignment | 0.850 | −0.004 |
 | per-token query supervision | 0.851 | −0.003 |
 
-Supplying organ masks at inference changes macro AUC by +0.001, so the reported
-numbers are mask-free.
+### What the released checkpoints measure
+
+The table above reproduces the paper. Re-running the three released checkpoints
+per seed on the CT-RATE validation split gives:
+
+| setting | macro AUC |
+|---|---|
+| mask-free (no TotalSegmentator at inference) | 0.8423 ± 0.0012 |
+| with organ masks (anatomy queries routed) | 0.8541 ± 0.0009 |
+
+So masks are worth +0.0118 on these files, not the +0.001 stated in the paper, and
+the mask-free figure is below the reported 0.855. Per-checkpoint numbers are on the
+[model card](https://huggingface.co/arc-ct/arc-ct). Quote the setting you ran.
 
 ## Repository layout
 

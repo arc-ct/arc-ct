@@ -28,19 +28,32 @@ comparing a volume against text prompts.
 | `arcct_seed1.pt` | full ARC-CT model, seed 1 |
 | `arcct_seed2.pt` | full ARC-CT model, seed 2 |
 
-All four were re-verified on the CT-RATE validation split (3,002 volumes) before
-release — every checkpoint loads with no missing or unexpected keys:
+All four checkpoints were re-verified on the CT-RATE validation split
+(3,002 volumes) before release; every one loads with no missing or unexpected keys.
 
-| checkpoint | macro AUC (with organ masks) | macro AUC (mask-free) |
+Two evaluation settings are reported separately, because they differ by more than
+a rounding error and the distinction is easy to lose:
+
+- **mask-free** — no TotalSegmentator masks at inference. All Q-Former queries are
+  unrestricted and averaged into one embedding. This is what you get if you run the
+  model on a volume without segmenting it first.
+- **with organ masks** — TotalSegmentator masks are supplied and the anatomy queries
+  are routed to their organ.
+
+| checkpoint | macro AUC (mask-free) | macro AUC (with organ masks) |
 |---|---|---|
-| `arcct_seed0.pt` | 0.8543 | 0.8518 |
-| `arcct_seed1.pt` | 0.8522 | 0.8525 |
-| `arcct_seed2.pt` | 0.8540 | 0.8528 |
-| **mean ± s.d.** | **0.8535 ± 0.0011** | **0.8524 ± 0.0005** |
+| `arcct_seed0.pt` | 0.8431 | 0.8547 |
+| `arcct_seed1.pt` | 0.8409 | 0.8530 |
+| `arcct_seed2.pt` | 0.8428 | 0.8545 |
+| **mean ± s.d.** | **0.8423 ± 0.0012** | **0.8541 ± 0.0009** |
 
-Mask-free is the setting you get without TotalSegmentator, and it costs only
-0.0011 macro AUC. `stage1_backbone.pt` is an 8-epoch Stage-1 run for warm-starting
-your own Stage 2; it is not the exact checkpoint used for the runs above.
+Supplying masks is worth **+0.0118** macro AUC on these checkpoints. Note that the
+paper reports 0.855 and describes the mask/mask-free gap as +0.001; the numbers in
+this table are what these released files measure, re-run per seed, and they do not
+reproduce that gap. Quote the setting you actually ran.
+
+`stage1_backbone.pt` is an 8-epoch Stage-1 run for warm-starting your own Stage 2;
+it is not the exact checkpoint behind the runs above.
 
 ## Usage
 
@@ -64,7 +77,8 @@ RAC_EVAL_CKPT=checkpoints/arcct_seed0.pt python tools/evaluate.py
 - **Objectives** label-Jaccard soft InfoNCE, per-organ alignment, per-token query
   supervision.
 
-Inference needs no organ masks and no language-model calls.
+Inference needs no organ masks and no language-model calls. Running mask-free
+is supported and is the default; see the table above for what it costs.
 
 ## Intended use and limits
 
