@@ -167,12 +167,15 @@ def _bootstrap_macro(pred, true, mask, n_bootstrap, seed, kind, threshold=0.5):
     return float(np.mean(boot)), float(np.percentile(boot, 2.5)), float(np.percentile(boot, 97.5))
 
 
+DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "data")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", default=os.environ.get("EVAL_CKPT", ""))
     ap.add_argument("--out_dir", default=os.environ.get("EVAL_RESULTS_DIR", ""))
     ap.add_argument("--rc_npz_dir", default=os.environ.get(
-        "RAC_RADCHEST_NPZ", "/mnt/amax5_drive/alp_ozaydin_0/data/rad_chest_ct/extracted"))
+        "RAC_RADCHEST_NPZ", os.path.join(DATA_ROOT, "rad_chest_ct", "extracted")))
     ap.add_argument("--rc_labels_csv", default=os.environ.get(
         "RAC_RADCHEST_LABELS",
         str(ROOT / "data" / "radchest_ctrate_aligned_full.csv")))

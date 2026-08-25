@@ -99,16 +99,21 @@ def normalize_keys(obj: dict) -> dict:
     return out
 
 
+DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "data")
+
+
 def main() -> None:
     reports_csv = os.environ.get(
         "RAC_REPORTS_CSV",
-        "/mnt/amax5_drive/alp_ozaydin_0/data/ct_reports/train_reports.csv",
+        os.path.join(DATA_ROOT, "ct_reports", "train_reports.csv"),
     )
     out_path = os.environ.get(
         "RAC_REGION_OUT",
-        "/mnt/amax5_drive/alp_ozaydin_0/data/region_cache_qwen3_100sample.json",
+        os.path.join(DATA_ROOT, "region_cache_qwen3.json"),
     )
-    sample_n = int(os.environ.get("RAC_SAMPLE_N", "100"))
+    # 0 = every report. The paper builds this cache over the full training split;
+    # a small sample leaves most volumes on the keyword fallback at train time.
+    sample_n = int(os.environ.get("RAC_SAMPLE_N", "0"))
     seed = int(os.environ.get("RAC_SEED", "42"))
     model_id = os.environ.get("RAC_QWEN_MODEL", "Qwen/Qwen3-8B")
     max_new = int(os.environ.get("RAC_MAX_NEW_TOKENS", "1024"))

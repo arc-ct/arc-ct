@@ -40,9 +40,9 @@ from arcct.dataset import PATHOLOGIES, RACDatasetV4, rac_collate  # noqa: E402
 from evaluate import build_model_for_eval, encode_prompts, TEMPERATURE  # noqa: E402
 from arcct.anatomy_qformer import build_role_mask  # noqa: E402
 
-DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "/mnt/amax5_drive/alp_ozaydin_0/data")
+DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "data")
 DATA_VALID = f"{DATA_ROOT}/mps_ct_npz/valid"
-MASK_VALID = os.environ.get("RAC_MASK_VALID", "/mnt/amax2_drive/alp_ozaydin_0/data/fine_valid_masks_192")
+MASK_VALID = os.environ.get("RAC_MASK_VALID", os.path.join(DATA_ROOT, "fine_valid_masks_192"))
 REPORTS_VALID = f"{DATA_ROOT}/ct_reports/valid_reports.csv"
 LABELS_VALID = os.environ.get("RAC_LABELS_VALID", f"{DATA_ROOT}/multi_abnormality_labels/valid_predicted_labels.csv")
 

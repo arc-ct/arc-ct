@@ -44,6 +44,7 @@ from arcct.dataset import (  # noqa: E402
     RACDatasetV4,
     rac_collate,
     region_text_from_cache,
+    region_fallback_count,
 )
 from arcct.lora import apply_lora_to_bert, is_lora_parameter  # noqa: E402
 from arcct.image_encoder import RACImageEncoder, load_from_stage1  # noqa: E402
@@ -52,11 +53,11 @@ from arcct.qformer import QFormer  # noqa: E402
 from arcct.anatomy_qformer import AnatomyQFormer  # noqa: E402
 
 
-DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "/mnt/amax5_drive/alp_ozaydin_0/data")
+DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "data")
 DATA_TRAIN = f"{DATA_ROOT}/mps_ct_npz/train"
 DATA_VALID = f"{DATA_ROOT}/mps_ct_npz/valid"
-MASK_TRAIN = os.environ.get("RAC_MASK_TRAIN", "/mnt/amax2_drive/alp_ozaydin_0/data/fine_train_masks_192")
-MASK_VALID = os.environ.get("RAC_MASK_VALID", "/mnt/amax2_drive/alp_ozaydin_0/data/fine_valid_masks_192")
+MASK_TRAIN = os.environ.get("RAC_MASK_TRAIN", os.path.join(DATA_ROOT, "fine_train_masks_192"))
+MASK_VALID = os.environ.get("RAC_MASK_VALID", os.path.join(DATA_ROOT, "fine_valid_masks_192"))
 REPORTS_TRAIN = f"{DATA_ROOT}/ct_reports/train_reports.csv"
 REPORTS_VALID = f"{DATA_ROOT}/ct_reports/valid_reports.csv"
 LABELS_TRAIN = os.environ.get("RAC_LABELS_TRAIN", f"{DATA_ROOT}/multi_abnormality_labels/train_predicted_labels.csv")
@@ -139,7 +140,10 @@ SIGLIP_B_INIT = float(os.environ.get("RAC_SIGLIP_B_INIT", "-10.0"))
 # and cosine'd against its class's pos/neg prompt embedding; BCE-style two-way
 # softmax with the label as target. Direct supervision on the region-bound
 # token, so the mean-pool of 32 tokens stops being the only training signal.
-PERTOKEN_NCE_WEIGHT = float(os.environ.get("RAC_PERTOKEN_NCE_WEIGHT", "0.0"))
+# Query supervision is a component of the method, not an optional extra: each
+# pathology query is scored against its positive/negative class prompt. The
+# default matches configs/stage2.env and the runs reported in the paper.
+PERTOKEN_NCE_WEIGHT = float(os.environ.get("RAC_PERTOKEN_NCE_WEIGHT", "0.5"))
 
 # Slice top-K BCE aux loss (AnatomyQFormer only). Per-slice anatomy-routed
 # QFormer forward, take pathology query tokens, score per slice, top-K mean,
@@ -185,7 +189,9 @@ FOCAL_CLASSES = {
 # GPT-2 small decoder fed from the Q-Former tokens for a report LM loss.
 USE_QFORMER = os.environ.get("RAC_USE_QFORMER", "0") == "1"
 USE_ANATOMY_QFORMER = os.environ.get("RAC_USE_ANATOMY_QFORMER", "0") == "1"
-QFORMER_NUM_QUERIES = int(os.environ.get("RAC_QFORMER_QUERIES", "32"))
+# 30 queries: 10 anatomy + 18 pathology + 2 global, as described in the paper
+# (Method, AnatomyQFormer). num_global is derived below as the remainder.
+QFORMER_NUM_QUERIES = int(os.environ.get("RAC_QFORMER_QUERIES", "30"))
 QFORMER_DEPTH = int(os.environ.get("RAC_QFORMER_DEPTH", "4"))
 QFORMER_HEADS = int(os.environ.get("RAC_QFORMER_HEADS", "8"))
 QFORMER_POOL = os.environ.get("RAC_QFORMER_POOL", "mean")
@@ -775,6 +781,13 @@ def main():
             )
             pos_embs, neg_embs = encode_prompts(clip, tokenizer, device)
             print(f"[RAC] update={update_step} global_val_auc={mean_auc:.4f} best={best_auc:.4f}", flush=True)
+            _fb = region_fallback_count()
+            if _fb:
+                # Per-organ alignment is meant to train on Qwen3-8B organ sentences.
+                # A non-zero count means part of it trained on keyword-extracted text
+                # instead, which is a different supervision signal to the paper's.
+                print(f"[RAC] organ-sentence keyword fallback used {_fb:,} times "
+                      f"(cache misses); paper runs use the Qwen3-8B cache for all volumes", flush=True)
             if mean_auc > best_auc:
                 best_auc = mean_auc
                 best_step = update_step

@@ -12,9 +12,12 @@ annotations or bounding boxes, and classifies 18 abnormalities zero-shot by
 comparing a volume against text prompts. It adds three things to global
 image-text contrastive learning:
 
-1. **AnatomyQFormer** — query transformer whose *anatomy* queries are masked to
-   one organ each, so anatomy is injected without bounding boxes or region
-   proposals; *pathology* queries attend freely; *global* queries summarise.
+1. **AnatomyQFormer** — a query transformer with 30 role-typed queries: 10
+   *anatomy* queries, each masked to one organ, so anatomy is injected without
+   bounding boxes or region proposals; 18 *pathology* queries, each restricted to
+   the union of organs its finding can occupy (medical material, which has no
+   anatomical prior, attends freely); and 2 *global* queries that summarise the
+   volume.
 2. **Label-Jaccard soft InfoNCE** — the contrastive target is blended with the
    label-set overlap of each pair, so scans that share findings are no longer
    pushed apart as false negatives.
@@ -44,6 +47,13 @@ python tools/prepare_data.py \
 
 # 2. 18 abnormality labels from the training reports (validation uses the official labels)
 python tools/extract_labels.py --reports DATA/train_reports.csv --out DATA/train_labels.csv
+
+# 3. per-organ report sentences, parsed once with Qwen3-8B. Stage 2's per-organ
+#    alignment loss trains on this cache; without it the loader falls back to
+#    keyword extraction, which does not reproduce the reported numbers.
+RAC_REPORTS_CSV=DATA/ct_reports/train_reports.csv \
+RAC_REGION_OUT=DATA/region_cache_qwen3.json \
+python tools/extract_organ_sentences.py
 ```
 
 Organ masks are produced with [TotalSegmentator](https://github.com/wasserthal/TotalSegmentator)
@@ -60,6 +70,7 @@ RAC_DATA_ROOT=DATA RAC_STAGE1_RESULTS_DIR=runs/stage1 python tools/train_stage1.
 # Stage 2: region-aware contrastive pretraining (14,400 updates, one 80 GB A100)
 set -a; source configs/stage2.env; set +a
 RAC_DATA_ROOT=DATA RAC_STAGE1_CKPT=runs/stage1/stage1_best.pt \
+RAC_REGION_CACHE=DATA/region_cache_qwen3.json \
 RAC_RESULTS_DIR=runs/arcct_seed0 RAC_SEED=0 python tools/train_stage2.py
 ```
 
@@ -82,6 +93,33 @@ python tools/gradcam.py --ckpt runs/arcct_seed0/CTCLIP.best.pt --volume DATA/npz
 Ablations (Table 3) are single-flag overrides — see `configs/ablations.md`.
 Measured numbers and the exact command for every table are in
 [`docs/REPRODUCE.md`](docs/REPRODUCE.md).
+
+## Results
+
+Prompt-based abnormality classification, no manual labels (Table 1 of the paper;
+three-seed mean). Following the CT-CLIP protocol, F1 is support-weighted and
+precision is for the positive class only.
+
+| | AUC | Prec | Acc | F1 |
+|---|---|---|---|---|
+| CT-RATE (in-domain) | **0.855** | **0.455** | **0.787** | **0.809** |
+| RAD-ChestCT (external, no fine-tuning) | 0.734 | 0.392 | 0.679 | 0.716 |
+
+Ablation deltas on CT-RATE macro AUC (leave-one-out, three seeds, 95% CI from a
+paired patient bootstrap):
+
+| Removed component | Macro AUC | Δ |
+|---|---|---|
+| ARC-CT (full) | 0.855 | — |
+| Stage-1 warm-start (Kinetics only) | 0.826 | −0.028 |
+| anatomy routing (plain Q-Former) | 0.837 | −0.017 |
+| label-Jaccard soft target | 0.845 | −0.009 |
+| learnable temperature | 0.847 | −0.007 |
+| per-organ alignment | 0.850 | −0.004 |
+| per-token query supervision | 0.851 | −0.003 |
+
+Supplying organ masks at inference changes macro AUC by +0.001, so the reported
+numbers are mask-free.
 
 ## Repository layout
 

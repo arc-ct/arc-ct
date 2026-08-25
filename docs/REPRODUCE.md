@@ -5,13 +5,22 @@ All reported ARC-CT numbers are the mean over `RAC_SEED=0,1,2`.
 
 ## Table 1 / Table 2 — CT-RATE and RAD-ChestCT
 
+Prerequisite: build the Qwen3-8B organ-sentence cache once. Stage 2's per-organ
+alignment trains on it; without it the loader falls back to keyword extraction and
+the numbers below do not reproduce.
+
 ```bash
+RAC_REPORTS_CSV=DATA/ct_reports/train_reports.csv \
+RAC_REGION_OUT=DATA/region_cache_qwen3.json \
+python tools/extract_organ_sentences.py
+
 set -a; source configs/stage1.env; set +a
 RAC_DATA_ROOT=DATA RAC_STAGE1_RESULTS_DIR=runs/stage1 python tools/train_stage1.py
 
 for SEED in 0 1 2; do
   set -a; source configs/stage2.env; set +a
   RAC_DATA_ROOT=DATA RAC_STAGE1_CKPT=runs/stage1/stage1_best.pt \
+  RAC_REGION_CACHE=DATA/region_cache_qwen3.json \
   RAC_SEED=$SEED RAC_RESULTS_DIR=runs/arcct_seed$SEED python tools/train_stage2.py
 
   RAC_EVAL_CKPT=runs/arcct_seed$SEED/CTCLIP.best.pt python tools/evaluate.py     # in-domain

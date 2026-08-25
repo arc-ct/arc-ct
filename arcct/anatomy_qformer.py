@@ -1,4 +1,4 @@
-"""Anatomy-bound Q-Former wrapper (Path 3).
+"""Anatomy-bound Q-Former wrapper (the AnatomyQFormer of the paper).
 
 Restricts each query token's cross-attention to a specific spatial region
 derived from the per-sample TotalSegmentator mask. Query roles are:
@@ -10,9 +10,9 @@ derived from the per-sample TotalSegmentator mask. Query roles are:
     queries 10-27 (18) -> one per pathology. Each pathology query attends
         to voxels inside ANY anatomy in PATHOLOGY_FINE_ORGANS[p].
 
-    queries 28-31 (4) -> "global" queries with unrestricted attention.
+    queries 28-29 (2) -> "global" queries with unrestricted attention.
 
-When ``has_mask[i]`` is False for sample i, all 32 queries get unrestricted
+When ``has_mask[i]`` is False for sample i, all 30 queries get unrestricted
 attention for that row (no role enforcement). This guarantees the loss
 remains well-defined on the small fraction of volumes that lack TS masks.
 """
@@ -31,7 +31,7 @@ def build_role_mask(
     spatial_shape: tuple[int, int, int],
     anatomy_labels: list[int],
     pathology_labels: list[list[int]],
-    num_global: int = 4,
+    num_global: int = 2,
 ) -> torch.Tensor:
     """Construct ``(B, Q, N)`` boolean mask.
 
@@ -105,7 +105,7 @@ class AnatomyQFormer(nn.Module):
         self,
         anatomy_labels: list[int],
         pathology_labels: list[list[int]],
-        num_global: int = 4,
+        num_global: int = 2,
         dim: int = 768,
         depth: int = 4,
         num_heads: int = 8,

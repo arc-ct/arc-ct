@@ -1,7 +1,7 @@
 """Dataset and anatomy helpers for the final RAC-CLIP TIA recipe.
 
 The executable pipeline uses the local CT-RATE NPZ cache under
-``/mnt/amax5_drive/alp_ozaydin_0/data``. Volumes are stored as HU / 1000 and
+``$RAC_DATA_ROOT`` (default ``data``). Volumes are stored as HU / 1000 and
 are cropped to a paper-faithful CT-RATE spatial grid:
 
     input cache: [H, W, D] = [192, 192, 96]
@@ -147,16 +147,42 @@ def _coerce_region_text(value: Any) -> str:
 
 
 def load_region_cache(path: str) -> dict[str, Any]:
-    if not path or not os.path.isfile(path):
+    """Load the Qwen3-8B organ-sentence cache built by tools/extract_organ_sentences.py.
+
+    The per-organ alignment loss in the paper is trained on organ sentences parsed
+    from each report by Qwen3-8B. This cache is that parse. Running Stage 2 without
+    it silently substitutes the keyword fallback below, which is NOT the configuration
+    the reported numbers come from, so an empty or missing path is reported loudly
+    rather than passed over.
+    """
+    if not path:
+        print("[RAC] WARNING: RAC_REGION_CACHE is unset. Per-organ alignment will use "
+              "the keyword fallback, not the Qwen3-8B organ sentences used in the paper. "
+              "Build one with tools/extract_organ_sentences.py.")
         return {}
+    if not os.path.isfile(path):
+        raise FileNotFoundError(
+            f"RAC_REGION_CACHE={path!r} does not exist. Build it with "
+            "tools/extract_organ_sentences.py, or unset the variable to fall back to "
+            "keyword extraction (which does not reproduce the paper)."
+        )
     with open(path) as f:
         cache = json.load(f)
     print(f"[RAC] Loaded region cache: {path} ({len(cache):,} top-level keys)")
     return cache
 
 
+_FALLBACK_HITS = {"n": 0, "warned": False}
+
+
 def region_text_from_cache(cache: dict[str, Any], accession: str, organ_label: int, findings_text: str) -> str:
-    """Return cached LLM organ text if present, otherwise keyword fallback."""
+    """Return the Qwen3-8B organ sentence for this (volume, organ), else keyword fallback.
+
+    The paper trains per-organ alignment on Qwen3-8B parses. The keyword fallback
+    exists so a missing entry cannot crash training, but it is a different supervision
+    signal; the first time it fires we say so, because a cache covering only part of
+    the training split would otherwise look like a correct run.
+    """
     keys = (
         f"{accession}|{organ_label}",
         f"{accession}:{organ_label}",
@@ -175,7 +201,18 @@ def region_text_from_cache(cache: dict[str, Any], accession: str, organ_label: i
             if text.strip():
                 return text
 
+    _FALLBACK_HITS["n"] += 1
+    if not _FALLBACK_HITS["warned"]:
+        _FALLBACK_HITS["warned"] = True
+        print(f"[RAC] WARNING: no cached organ sentence for {accession!r} organ={organ_label}; "
+              "using keyword fallback. The paper's per-organ alignment uses Qwen3-8B parses "
+              "for every volume.")
     return localize_findings(findings_text, organ_label)
+
+
+def region_fallback_count() -> int:
+    """How many times the keyword fallback replaced a Qwen3-8B organ sentence."""
+    return _FALLBACK_HITS["n"]
 
 
 def _npz_to_mask_path(npz_path: str, mask_root: str) -> str:

@@ -30,11 +30,11 @@ from arcct.dataset import PATHOLOGIES, N_PATH, RACDatasetV4, rac_collate  # noqa
 from arcct.image_encoder import RACImageEncoder  # noqa: E402
 
 
-DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "/mnt/amax5_drive/alp_ozaydin_0/data")
+DATA_ROOT = os.environ.get("RAC_DATA_ROOT", "data")
 DATA_TRAIN = f"{DATA_ROOT}/mps_ct_npz/train"
 DATA_VALID = f"{DATA_ROOT}/mps_ct_npz/valid"
-MASK_TRAIN = os.environ.get("RAC_MASK_TRAIN", "/mnt/amax2_drive/alp_ozaydin_0/data/fine_train_masks_192")
-MASK_VALID = os.environ.get("RAC_MASK_VALID", "/mnt/amax2_drive/alp_ozaydin_0/data/fine_valid_masks_192")
+MASK_TRAIN = os.environ.get("RAC_MASK_TRAIN", os.path.join(DATA_ROOT, "fine_train_masks_192"))
+MASK_VALID = os.environ.get("RAC_MASK_VALID", os.path.join(DATA_ROOT, "fine_valid_masks_192"))
 REPORTS_TRAIN = f"{DATA_ROOT}/ct_reports/train_reports.csv"
 REPORTS_VALID = f"{DATA_ROOT}/ct_reports/valid_reports.csv"
 LABELS_TRAIN = os.environ.get("RAC_LABELS_TRAIN", f"{DATA_ROOT}/multi_abnormality_labels/train_predicted_labels.csv")

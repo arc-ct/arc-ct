@@ -145,7 +145,7 @@ def main():
 
     data_root = os.environ.get(
         "RAC_DATA_ROOT",
-        "/mnt/amax5_drive/alp_ozaydin_0/data",
+        "data",
     )
     reports_csv = os.environ.get(
         "RAC_REPORTS_CSV",
