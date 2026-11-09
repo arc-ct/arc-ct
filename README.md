@@ -1,6 +1,6 @@
 # ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT
 
-[![paper](https://img.shields.io/badge/paper-OpenReview-b31b1b)](https://openreview.net/pdf?id=t6mhjZ4R70)
+[![arXiv](https://img.shields.io/badge/arXiv-2608.28455-b31b1b.svg)](https://arxiv.org/abs/2608.28455) [![HF Paper](https://img.shields.io/badge/%F0%9F%A4%97%20HF-paper-yellow)](https://huggingface.co/papers/2608.28455) [![paper](https://img.shields.io/badge/paper-OpenReview-b31b1b)](https://openreview.net/pdf?id=t6mhjZ4R70)
 [![weights](https://img.shields.io/badge/weights-HuggingFace-yellow)](https://huggingface.co/arc-ct/arc-ct)
 
 Official implementation of *ARC-CT: Anatomy-Routed Contrastive Vision-Language
