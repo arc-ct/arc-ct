@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT</title>
+<meta name="description" content="ARC-CT is a region-aware contrastive vision-language model for 3D chest CT. It classifies 18 abnormalities zero-shot on CT-RATE (0.855 macro AUC) using only report-derived labels and a 3D ResNet-18. Code and weights are public.">
+<meta name="keywords" content="ARC-CT, chest CT, 3D medical imaging, vision-language, contrastive learning, CT-RATE, RAD-ChestCT, zero-shot abnormality classification, AnatomyQFormer, radiology reports, MICCAI 2026">
+<link rel="canonical" href="https://arc-ct.github.io/arc-ct/">
+<meta name="citation_title" content="ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT">
+<meta name="citation_author" content="Huseyin Umut Isik">
+<meta name="citation_author" content="Mehmet Alp Ozaydin">
+<meta name="citation_author" content="Sila Kurugol">
+<meta name="citation_author" content="Seyda Ertekin">
+<meta name="citation_publication_date" content="2026/08/28">
+<meta name="citation_arxiv_id" content="2608.28455">
+<meta name="citation_pdf_url" content="https://arxiv.org/pdf/2608.28455">
+<meta name="citation_abstract_html_url" content="https://arxiv.org/abs/2608.28455">
+
+<meta property="og:type" content="article"><meta property="og:title" content="ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT">
+<meta property="og:description" content="ARC-CT is a region-aware contrastive vision-language model for 3D chest CT. It classifies 18 abnormalities zero-shot on CT-RATE (0.855 macro AUC) using only report-derived labels and a 3D ResNet-18. Code and weights are public."><meta property="og:url" content="https://arc-ct.github.io/arc-ct/">
+<meta property="og:image" content="https://arc-ct.github.io/arc-ct/figures/overview.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT">
+<meta name="twitter:description" content="ARC-CT is a region-aware contrastive vision-language model for 3D chest CT. It classifies 18 abnormalities zero-shot on CT-RATE (0.855 macro AUC) using only report-derived labels and a 3D ResNet-18. Code and weights are public."><meta name="twitter:image" content="https://arc-ct.github.io/arc-ct/figures/overview.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ScholarlyArticle", "headline": "ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT", "name": "ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT", "author": [{"@type": "Person", "name": "Huseyin Umut Isik"}, {"@type": "Person", "name": "Mehmet Alp Ozaydin"}, {"@type": "Person", "name": "Sila Kurugol"}, {"@type": "Person", "name": "Seyda Ertekin"}], "datePublished": "2026-08-28", "abstract": "Contrastive vision-language learning uses paired chest CT volumes and radiology reports to learn abnormality classifiers without manually annotated labels. However, two characteristics of chest CT challenge conventional global contrastive learning. First, many critical abnormalities are small or anatomically localized, and pooling an entire volume into a single embedding may dilute their visual evidence. Second, the standard contrastive objective treats every other scan in a batch as a negative. Because many chest CTs share abnormalities, this objective incorrectly pushes co-positive pairs apart. We propose Anatomy-Routed Contrastive Learning for 3D Chest CT (ARC-CT), a region-aware framework that addresses these limitations using only labels extracted from reports by an LLM, with no manual annotations or bounding boxes. ARC-CT combines three components: (1) an AnatomyQFormer localizing evidence via queries constrained by automatically generated organ masks; (2) a label-Jaccard soft InfoNCE objective integrating the standard one-hot target with the label-set overlap of each pair, which reduces false-negative penalties between studies that share clinical findings; and (3) an organ-level alignment loss connecting mask-pooled visual features to organ-specific report text extracted offline with a large language model. ARC-CT achieves a 0.86 mask-free macro AUC across 18 abnormalities using a compact 3D ResNet-18 backbone. Overall, ARC-CT outperforms both comparable efficient baselines and several larger transformer models.", "url": "https://arc-ct.github.io/arc-ct/", "sameAs": ["https://arxiv.org/abs/2608.28455", "https://github.com/arc-ct/arc-ct"], "keywords": "ARC-CT, chest CT, 3D medical imaging, vision-language, contrastive learning, CT-RATE, RAD-ChestCT, zero-shot abnormality classification, AnatomyQFormer, radiology reports, MICCAI 2026", "identifier": {"@type": "PropertyValue", "propertyID": "arXiv", "value": "2608.28455"}}</script>
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--mut:#555;--acc:#b31b1b;--card:#f6f6f4;--bd:#e3e3df}
+@media (prefers-color-scheme:dark){:root{--bg:#111;--fg:#eee;--mut:#aaa;--acc:#ff6b6b;--card:#1b1b1b;--bd:#333}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:860px;margin:0 auto;padding:40px 16px 80px}
+h1{font-size:2rem;line-height:1.2;margin:.2em 0 .4em;text-align:center}
+h2{margin-top:2.2em;border-bottom:1px solid var(--bd);padding-bottom:.2em}
+.authors,.aff,.venue{text-align:center;margin:.3em 0}.aff{color:var(--mut);font-size:.95rem}.venue{font-weight:600;color:var(--acc)}
+.links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:1.4em 0}
+.links a{background:var(--fg);color:var(--bg);text-decoration:none;padding:8px 16px;border-radius:999px;font-size:.95rem;font-weight:600}
+figure{margin:1.6em 0;text-align:center}figure img{max-width:100%;height:auto;border-radius:6px;background:#fff}
+figcaption{color:var(--mut);font-size:.9rem;margin-top:.5em;text-align:left}
+table{border-collapse:collapse;margin:1em auto;font-size:.95rem}td,th{border:1px solid var(--bd);padding:6px 12px;text-align:center}th{background:var(--card)}
+pre{background:var(--card);border:1px solid var(--bd);padding:14px;border-radius:6px;overflow-x:auto;font-size:.85rem}
+a{color:var(--acc)}footer{margin-top:3em;color:var(--mut);font-size:.85rem;text-align:center}
+</style></head><body><main>
+<h1>ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT</h1>
+<p class="authors"><a href="https://scholar.google.com/citations?user=UvtcTtEAAAAJ">Huseyin Umut Isik</a>, Mehmet Alp Ozaydin, Sila Kurugol, &#350;eyda Ertekin</p>
+<p class="aff">Middle East Technical University &middot; Boston Children's Hospital, Harvard Medical School</p>
+<p class="venue">Thoracic Image Analysis (TIA) Workshop at MICCAI 2026 &mdash; oral</p>
+<div class="links"><a href="https://arxiv.org/abs/2608.28455">Paper (arXiv)</a><a href="https://arxiv.org/pdf/2608.28455">PDF</a><a href="https://github.com/arc-ct/arc-ct">Code</a><a href="https://huggingface.co/arc-ct/arc-ct">Weights (Hugging Face)</a><a href="https://huggingface.co/papers/2608.28455">HF paper page</a></div>
+<figure><img src="figures/overview.png" alt="ARC-CT overview: stage 1 supervised warm-start and stage 2 anatomy-routed contrastive pretraining" loading="lazy"><figcaption>Overview. Stage 1 pretrains a 3D ResNet-18 on 18 LLM-extracted abnormality labels. Stage 2 adds the AnatomyQFormer, the label-Jaccard soft InfoNCE objective and per-organ alignment. Inference is prompt-based and needs no masks.</figcaption></figure><figure><img src="figures/gradcam.png" alt="Mask-free Grad-CAM of ARC-CT for four positive findings on a CT-RATE validation volume" loading="lazy"><figcaption>Mask-free Grad-CAM for four positive findings (cardiomegaly, arterial wall calcification, pleural effusion, consolidation) on one CT-RATE validation volume.</figcaption></figure>
+<h2>Abstract</h2><p>Contrastive vision-language learning uses paired chest CT volumes and radiology reports to learn abnormality classifiers without manually annotated labels. However, two characteristics of chest CT challenge conventional global contrastive learning. First, many critical abnormalities are small or anatomically localized, and pooling an entire volume into a single embedding may dilute their visual evidence. Second, the standard contrastive objective treats every other scan in a batch as a negative. Because many chest CTs share abnormalities, this objective incorrectly pushes co-positive pairs apart. We propose Anatomy-Routed Contrastive Learning for 3D Chest CT (ARC-CT), a region-aware framework that addresses these limitations using only labels extracted from reports by an LLM, with no manual annotations or bounding boxes. ARC-CT combines three components: (1) an AnatomyQFormer localizing evidence via queries constrained by automatically generated organ masks; (2) a label-Jaccard soft InfoNCE objective integrating the standard one-hot target with the label-set overlap of each pair, which reduces false-negative penalties between studies that share clinical findings; and (3) an organ-level alignment loss connecting mask-pooled visual features to organ-specific report text extracted offline with a large language model. ARC-CT achieves a 0.86 mask-free macro AUC across 18 abnormalities using a compact 3D ResNet-18 backbone. Overall, ARC-CT outperforms both comparable efficient baselines and several larger transformer models.</p>
+
+<h2>Results</h2>
+<p>Prompt-based abnormality classification with no manual labels (three-seed mean).</p>
+<table><tr><th></th><th>AUC</th><th>Precision</th><th>Accuracy</th><th>F1</th></tr>
+<tr><td>CT-RATE (in-domain, 18 abnormalities)</td><td><b>0.855</b></td><td>0.455</td><td>0.787</td><td>0.809</td></tr>
+<tr><td>RAD-ChestCT (external, no fine-tuning)</td><td>0.734</td><td>0.392</td><td>0.679</td><td>0.716</td></tr></table>
+<p>Per-class AUCs, the leave-one-out ablation and cross-modal retrieval results are in the <a href="https://arxiv.org/abs/2608.28455">paper</a>; the exact command for every table is in <a href="https://github.com/arc-ct/arc-ct/blob/main/docs/REPRODUCE.md">REPRODUCE.md</a>.</p>
+<h2>What is in the release</h2>
+<ul><li>Training code for both stages, evaluation on CT-RATE and RAD-ChestCT, retrieval and Grad-CAM scripts.</li>
+<li>Pretrained weights on <a href="https://huggingface.co/arc-ct/arc-ct">Hugging Face</a> (MIT licence).</li>
+<li>The text prompts used for zero-shot classification.</li></ul>
+<h2>BibTeX</h2><pre>@inproceedings{isik2026arcct,
+  title     = {ARC-CT: Anatomy-Routed Contrastive Vision-Language Learning for 3D Chest CT},
+  author    = {Isik, Huseyin Umut and Ozaydin, Mehmet Alp and Kurugol, Sila and Ertekin, Seyda},
+  booktitle = {Thoracic Image Analysis (TIA) Workshop at MICCAI},
+  year      = {2026},
+  eprint    = {2608.28455},
+  archivePrefix = {arXiv}
+}</pre>
+<footer>Code released under the MIT licence. Page source: <a href="https://github.com/arc-ct/arc-ct/tree/main/docs">github.com/arc-ct/arc-ct</a>.</footer>
+</main></body></html>

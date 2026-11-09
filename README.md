@@ -26,6 +26,10 @@ image-text contrastive learning:
 
 Inference is prompt-based and needs no masks and no language model.
 
+<p align="center"><img src="docs/figures/overview.png" width="820" alt="ARC-CT overview"></p>
+
+Project page: https://arc-ct.github.io/arc-ct/
+
 ## Install
 
 ```bash
